@@ -1,0 +1,32 @@
+.tab-menu {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  background: #222;
+}
+
+.tab-menu button {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  background: #444;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: 0.2s;
+}
+
+.tab-menu button:hover {
+  background: #666;
+}
+
+.tab-menu button.active {
+  background: #007bff;
+}
+
+.tab-content {
+  padding: 30px;
+  background: white;
+  border: 1px solid #ddd;
+  min-height: 150px;
+}

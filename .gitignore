@@ -1,0 +1,28 @@
+# --- Data ---
+# Large Transfermarkt CSVs (some exceed GitHub's 100 MB limit). These are
+# input data, not source. See README for where to download them.
+data/
+
+# --- Node / React ---
+frontend/node_modules/
+frontend/build/
+npm-debug.log*
+yarn-error.log*
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# --- Environment / secrets ---
+.env
+.env.local
+
+# --- Editor / OS ---
+.DS_Store
+.vscode/
+.idea/
+.claude/
