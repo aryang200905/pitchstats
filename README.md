@@ -53,6 +53,8 @@ project/
 
 ## 1. Set up the database (one time)
 
+Be sure to import the dataset in `data/` as specified in the Note before completing this step.
+
 Run from the project root. This drops and recreates `pitchstats`, then loads the data.
 
 ```bash
@@ -65,6 +67,20 @@ python backend/sql/load_data.py
 # create the 2 views and 5 stored procedures
 /usr/local/mysql/bin/mysql -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/views.sql
 /usr/local/mysql/bin/mysql -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/procedures.sql
+```
+
+If you are running a Windows device and/or have the `python` command as `py`, you can run a version of this in command prompt instead.
+
+```cmd
+# create the 12 tables
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/schema.sql
+
+# load all CSVs (takes ~40s; prints row counts per table)
+py backend/sql/load_data.py
+
+# create the 2 views and 5 stored procedures
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/views.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/procedures.sql
 ```
 
 Row counts after loading:
@@ -87,6 +103,8 @@ Row counts after loading:
 ---
 
 ## 2. Run the backend
+
+You can update `python` to `py` if needed.
 
 ```bash
 cd backend
