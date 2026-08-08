@@ -340,26 +340,56 @@ function ParamField({ param, value, onChange, loaded }) {
 // ---------------------------------------------------------------------------
 // Result renderers.
 // ---------------------------------------------------------------------------
-function ResultTable({ data }) {
+function ResultTable({ data, highlightComparison = false }) {
   if (!data || data.length === 0) return <p className="muted">No data.</p>;
   const [columns, ...rows] = data;
   if (rows.length === 0) return <p className="muted">No matching rows.</p>;
+
+  // Find highest numeric value per column
+  const bestValues = {};
+
+  if (highlightComparison) {
+    columns.forEach((_, colIndex) => {
+      const values = rows
+        .map((row) => Number(row[colIndex]))
+        .filter((v) => Number.isFinite(v));
+
+      if (values.length > 0) {
+        bestValues[colIndex] = Math.max(...values);
+      }
+    });
+  }
 
   return (
     <table className="result-table">
       <thead>
         <tr>
-          {columns.map((c) => (
-            <th key={c}>{c}</th>
+          {columns.map((c, i) => (
+            <th key={i}>{c}</th>
           ))}
         </tr>
       </thead>
+
       <tbody>
         {rows.map((row, i) => (
           <tr key={i}>
-            {row.map((v, j) => (
-              <td key={j}>{v === null ? "—" : String(v)}</td>
-            ))}
+            {row.map((v, j) => {
+              const numericValue = Number(v);
+
+              const isBest =
+                highlightComparison &&
+                Number.isFinite(numericValue) &&
+                numericValue === bestValues[j];
+
+              return (
+                <td
+                  key={j}
+                  className={isBest ? "better-stat" : ""}
+                >
+                  {v === null ? "—" : String(v)}
+                </td>
+              );
+            })}
           </tr>
         ))}
       </tbody>
@@ -576,11 +606,11 @@ function OperationPanel({ operations, variant }) {
               <BarChart data={data} />
             )}
 
-            <ResultTable data={data} />
+            <ResultTable data={data} highlightComparison={variant === "compare"} />
           </>
         )}
         {!error && !loading && data && variant !== "graph" && (
-          <ResultTable data={data} />
+          <ResultTable data={data} highlightComparison={variant === "compare"} />
         )}
       </div>
     </div>
@@ -592,7 +622,7 @@ function PlayersClubs() {
 }
 
 function Compare() {
-  return <OperationPanel operations={COMPARE_OPS} variant="table" />;
+  return <OperationPanel operations={COMPARE_OPS} variant="compare" />;
 }
 
 function Graph() {

@@ -9,6 +9,7 @@
   --accent-hover: #6fd3ff;
   --accent-deep: #0ea5e9;
   --text: #e6edf6;
+  --text-highlight: #05121f;
   --muted: #93a4bd;
   --line: #24324e;
   --good: #34d399;
@@ -82,7 +83,7 @@ html, body {
 
 .tab-box.selected {
   background: linear-gradient(180deg, var(--accent) 0%, var(--accent-deep) 100%);
-  color: #05121f;
+  color: var(--text-highlight);
   box-shadow: 0 6px 18px rgba(56, 189, 248, 0.35);
 }
 
@@ -274,6 +275,13 @@ html, body {
   overflow: hidden;
 }
 
+.result-table .better-stat {
+  background-color: var(--accent);
+  color: var(--text-highlight);
+  font-weight: bold;
+  border-radius: 4px;
+}
+
 .result-table th,
 .result-table td {
   border-bottom: 1px solid var(--line);
@@ -294,6 +302,12 @@ html, body {
 
 .result-table tbody tr:hover td {
   background: #1f2f4d;
+}
+
+.result-table tbody tr:hover td.better-stat {
+  background-color: var(--accent);
+  color: var(--text-highlight);
+  font-weight: bold;
 }
 
 /* Bar chart (Graph tab) */
