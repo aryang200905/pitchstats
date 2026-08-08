@@ -349,6 +349,21 @@ html, body {
   color: var(--muted);
 }
 
+/* Graph chart (Graph tab) */
+.graph-chart {
+  background: var(--panel-2);
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
+.graph-chart-title {
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
 .page {
   padding: 30px;
 }

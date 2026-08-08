@@ -1,5 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
+import { Line } from "react-chartjs-2";
+import "chartjs-adapter-date-fns";
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  Tooltip,
+  Legend
+} from "chart.js";
+
+ChartJS.register(
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  Tooltip,
+  Legend
+);
 
 // ---------------------------------------------------------------------------
 // Backend call helper. package.json sets "proxy" to the Flask server, so a
@@ -349,7 +371,7 @@ function BarChart({ data }) {
   if (!data || data.length < 2) return <p className="muted">No data to graph.</p>;
   const [columns, ...rows] = data;
 
-  const valueIdx = columns.length - 1;
+  const valueIdx = columns.length - 2;
   const labelIdx = 0;
   const values = rows.map((r) => Number(r[valueIdx]) || 0);
   const max = Math.max(...values, 1);
@@ -371,6 +393,86 @@ function BarChart({ data }) {
           <span className="bar-value">{String(r[valueIdx])}</span>
         </div>
       ))}
+    </div>
+  );
+}
+
+function GraphChart({ data }) {
+  if (!data || data.length < 2) return <p className="muted">No data to graph.</p>;
+  const [columns, ...rows] = data;
+
+  const valueIdx = 2;
+  const dateIdx = 1;
+
+  const chartData = rows.map((r) => ({
+    x: new Date(r[dateIdx]), // spacing comes from this date
+    y: Number(r[valueIdx]) || 0
+  }));
+
+  const colors = getComputedStyle(document.documentElement);
+
+  const accent = colors.getPropertyValue("--accent").trim();
+  const text = colors.getPropertyValue("--text").trim();
+  const line = colors.getPropertyValue("--line").trim();
+
+  return (
+    <div className="graph-chart">
+      <div className="graph-chart-title">
+        {columns[valueIdx]} by {columns[dateIdx]}
+      </div>
+
+      <Line
+        data={{
+          datasets: [
+            {
+              label: columns[valueIdx],
+              data: chartData,
+              borderColor: accent,
+              backgroundColor: accent,
+              pointBackgroundColor: accent,
+              pointBorderColor: accent,
+              borderWidth: 2,
+              tension: 0
+            }
+          ]
+        }}
+        options={{
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: text
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: "time",
+              time: {
+                unit: "month",
+                displayFormats: {
+                  month: "M/d/yyyy"
+                }
+              },
+              ticks: {
+                color: text,
+                maxTicksLimit: 10
+              },
+              grid: {
+                color: line
+              }
+            },
+            y: {
+              ticks: {
+                color: text
+              },
+              grid: {
+                color: line
+              }
+            }
+          }
+        }}
+      />
     </div>
   );
 }
@@ -466,7 +568,14 @@ function OperationPanel({ operations, variant }) {
         {!error && loading && <p className="muted">Loading…</p>}
         {!error && !loading && data && variant === "graph" && (
           <>
-            <BarChart data={data} />
+            {current.endpoint === "q2_market_value_trend" && (
+              <GraphChart data={data} />
+            )}
+
+            {current.endpoint === "q6_transfer_activity" && (
+              <BarChart data={data} />
+            )}
+
             <ResultTable data={data} />
           </>
         )}
