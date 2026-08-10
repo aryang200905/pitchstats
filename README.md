@@ -27,7 +27,8 @@ project/
 │       ├── schema.sql    # 12-table schema (drops & recreates the DB)
 │       ├── load_data.py  # ETL: cleans CSVs and loads all tables
 │       ├── views.sql     # 2 views
-│       └── procedures.sql# 5 stored procedures
+│       ├── procedures.sql# 5 stored procedures
+│       └── indexes.sql   # 4 performance indexes (CP4)
 ├── frontend/             # React app (src/App.js is the main UI)
 ├── docs/                 # checkpoint PDFs
 └── README.md
@@ -67,6 +68,9 @@ python backend/sql/load_data.py
 # create the 2 views and 5 stored procedures
 /usr/local/mysql/bin/mysql -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/views.sql
 /usr/local/mysql/bin/mysql -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/procedures.sql
+
+# create the 4 performance indexes (CP4) — run after data is loaded
+/usr/local/mysql/bin/mysql -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/indexes.sql
 ```
 
 If you are running a Windows device and/or have the `python` command as `py`, you can run a version of this in command prompt instead.
@@ -81,6 +85,9 @@ py backend/sql/load_data.py
 # create the 2 views and 5 stored procedures
 "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/views.sql
 "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/procedures.sql
+
+# create the 4 performance indexes (CP4) — run after data is loaded
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -ppitchstats --socket=/tmp/mysql.sock < backend/sql/indexes.sql
 ```
 
 Row counts after loading:
